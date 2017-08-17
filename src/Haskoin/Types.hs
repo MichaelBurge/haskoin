@@ -1,4 +1,4 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving, NoImplicitPrelude, DeriveTraversable, DeriveDataTypeable, StandaloneDeriving, TypeSynonymInstances, FlexibleInstances #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving, NoImplicitPrelude, DeriveTraversable, DeriveDataTypeable, StandaloneDeriving, TypeSynonymInstances, FlexibleInstances, DeriveGeneric #-}
 
 module Haskoin.Types where
 
@@ -32,3 +32,6 @@ data MerkleF a = Genesis
                deriving (Eq, Show, Functor, Traversable, Foldable)
 
 type Blockchain = Cofree MerkleF Block
+
+deriving instance Generic Blockchain
+-- deriving instance (Ger a, Data (f (Cofree f a)), Typeable f) => Data (Cofree f a)
