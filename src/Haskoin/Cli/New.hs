@@ -13,6 +13,7 @@ import qualified Data.ByteString.Lazy as BSL
 
 defaultChainFile = "main.chain"
 
+main :: IO ()
 main = do
   args <- getArgs
   let filename = case args of
