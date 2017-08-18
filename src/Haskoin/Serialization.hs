@@ -8,6 +8,8 @@ import Crypto.Hash
 import Data.Binary
 import Data.Binary.Get
 import Data.ByteArray
+import Data.Time.Clock
+import Data.Time.Clock.POSIX
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BSL
 import Data.Vector.Binary
@@ -17,6 +19,9 @@ instance (Binary (f (Cofree f a)), Binary a) => Binary (Cofree f a) where
 instance (Binary a) => Binary (MerkleF a) where
 instance Binary BlockHeader where
 instance Binary Transaction where
+instance Binary POSIXTime where
+  get = fromInteger <$> (get :: Get Integer)
+  put x = put $ (round x :: Integer)
 deriving instance Binary Account
 deriving instance Binary Block
 
@@ -32,8 +37,3 @@ instance Binary HaskoinHash where
       Just digest -> return digest
   put digest = put $ (convert digest :: BS.ByteString)
 
-deserialize :: BSL.ByteString -> Blockchain
-deserialize = decode
-
-serialize :: Blockchain -> BSL.ByteString
-serialize = encode
