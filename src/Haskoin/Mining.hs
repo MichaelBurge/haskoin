@@ -22,6 +22,7 @@ globalTransactionLimit = 1000
 numBlocksToCalculateDifficulty = 5
 genesisBlockDifficulty = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 targetTime = 10
+blockReward = 1000
 
 mineOn :: TransactionPool -> Account -> Blockchain -> IO Blockchain
 mineOn pendingTransactions minerAccount parent = do
@@ -94,7 +95,8 @@ balances bc =
   let txns = toList $ mconcat $ toList bc
       debits = map (\Transaction{ _from = acc, _amount = amount} -> (acc, -amount)) txns
       credits = map (\Transaction{ _to = acc, _amount = amount} -> (acc, amount)) txns
-  in M.fromListWith (+) $ debits ++ credits
+      minings = map (\h -> (_miner h, blockReward)) $ headers bc
+  in M.fromListWith (+) $ debits ++ credits ++ minings
 
 validTransactions :: Blockchain -> [Transaction] -> [Transaction]
 validTransactions bc txns =
