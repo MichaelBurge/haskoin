@@ -22,6 +22,11 @@ instance Binary Transaction where
 instance Binary POSIXTime where
   get = fromInteger <$> (get :: Get Integer)
   put x = put $ (round x :: Integer)
+
+instance Binary SeedServer where
+instance Binary Supernode where
+instance Binary HaskoinRequest where
+instance Binary HaskoinResponse where
 deriving instance Binary Account
 deriving instance Binary Block
 
@@ -36,4 +41,3 @@ instance Binary HaskoinHash where
       Nothing -> fail "Not a valid digest"
       Just digest -> return digest
   put digest = put $ (convert digest :: BS.ByteString)
-

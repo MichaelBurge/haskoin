@@ -44,7 +44,7 @@ mineOn pendingTransactions minerAccount parent = do
             _minedAt = now
             }
           block = Block (V.fromList ts)
-          candidate = block :< Node header parent
+          candidate = addBlock block header parent
           log = if candidateDifficulty < bestDifficulty
                 then do
                   print ("New candidate found: ", logBase 10 $ fromIntegral $ desiredDifficulty parent, logBase 10 $ fromIntegral $ candidateDifficulty)
@@ -105,6 +105,15 @@ validTransactions bc txns =
         Nothing -> False
         Just balance -> balance >= _amount txn
   in filter validTxn txns
+
+validateChain :: Blockchain -> Bool
+validateChain _ = True
+
+validateTxn :: Blockchain -> Transaction -> Bool
+validateTxn _ _ = True
+
+addBlock :: Block -> BlockHeader -> Blockchain -> Blockchain
+addBlock block header chain = block :< Node header chain
 
 ----
 
