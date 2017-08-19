@@ -45,6 +45,7 @@ library
                      , wai
                      , text
                      , http-types
+                     , cassava
   default-language:    Haskell2010
 
 executable new

@@ -12,6 +12,7 @@ import Data.Binary
 import qualified Data.ByteString.Lazy as BSL
 import System.Directory
 import Prelude(read)
+import Data.Csv
 
 defaultChainFile = "main.chain"
 defaultAccount = "10"
@@ -28,8 +29,18 @@ main = do
       txnPool = return []
       account = Account $ read accountS
   forever $ do
-    chain <- decodeFile filename :: IO Blockchain
+    chain <- loadOrCreate filename makeGenesis :: IO Blockchain
     newChain <- mineOn txnPool account chain
     encodeFile swapFile newChain
     copyFile swapFile filename
     print "Block mined and saved!"
+
+loadOrCreate :: Binary a => FilePath -> (IO a) -> IO a
+loadOrCreate filename init = do
+  exists <- doesFileExist filename
+  if exists
+    then decodeFile filename
+    else do
+      x <- init
+      encodeFile filename x
+      return x
